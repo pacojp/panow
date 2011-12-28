@@ -5,19 +5,19 @@
 describe "パーサー" do
   before do
     url = 'http://localhost:18764/index.html'
-    @parser = HtmlParser.new(url)
+    @parser = Panow::HtmlParser.new(url)
     @image_urls = @parser.image_urls
     @images = @parser.images
-    @image_save_root = File::dirname(__FILE__) + '/../test_image_save_root/'
+    @image_save_root = File::dirname(__FILE__) + '/../../../workspace/test_image_save_root/'
   end
 
   context 'HtmlParserのスタティックメソッド' do
     it 'get_uri_dir' do
-      HtmlParser.get_uri_dir('http://yahoo.co.jp').should eq 'http://yahoo.co.jp:80/'
-      HtmlParser.get_uri_dir('http://yahoo.co.jp/test').should eq 'http://yahoo.co.jp:80/'
-      HtmlParser.get_uri_dir('http://yahoo.co.jp/test/').should eq 'http://yahoo.co.jp:80/test/'
-      HtmlParser.get_uri_dir('http://yahoo.co.jp/test/1.jpg').should eq 'http://yahoo.co.jp:80/test/'
-      HtmlParser.get_uri_dir('http://yahoo.co.jp/test/do.aspx?test=1').should eq 'http://yahoo.co.jp:80/test/'
+      Panow::HtmlParser.get_uri_dir('http://yahoo.co.jp').should eq 'http://yahoo.co.jp:80/'
+      Panow::HtmlParser.get_uri_dir('http://yahoo.co.jp/test').should eq 'http://yahoo.co.jp:80/'
+      Panow::HtmlParser.get_uri_dir('http://yahoo.co.jp/test/').should eq 'http://yahoo.co.jp:80/test/'
+      Panow::HtmlParser.get_uri_dir('http://yahoo.co.jp/test/1.jpg').should eq 'http://yahoo.co.jp:80/test/'
+      Panow::HtmlParser.get_uri_dir('http://yahoo.co.jp/test/do.aspx?test=1').should eq 'http://yahoo.co.jp:80/test/'
     end
   end
 
