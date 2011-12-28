@@ -5,6 +5,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 require 'active_support/all'
 
 require 'panow/html_parser'
+require 'panow/extract_content'
 
 
 module Panow
