@@ -13,7 +13,7 @@
 テスト方法
 
   #テストwebサーバを起動する
-  ./start_test_www_server.sh
+  cd test_resources/ && ./start_test_www.sh
 
   #自動テストを起動する
   bundle exec guard start
