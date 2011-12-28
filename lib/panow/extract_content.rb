@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# 基本以下の方のコードです。がruby1.9対応とか個人的な調整等入ってかなりげちょげちょになってると思います（子細は思い出せません）
+# 基本nakatani様のコードです。がruby1.9対応とか個人的な調整等入ってかなりげちょげちょになってると思います（子細は思い出せません）
 
 #!/usr/bin/ruby -Ku
 #$KCODE="u"
@@ -96,7 +96,7 @@ module Panow
         puts "ko #{$1} ko" * 80
         if html =~ /<img class="photo" id="photo-display" src="(.+?)".*?\/>/m
           html = caption
-          puts "ko #{$1} ko" * 80
+          #puts "ko #{$1} ko" * 80
           images << $1
         end
       end

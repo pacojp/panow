@@ -62,6 +62,7 @@ module Panow
       @url = url
       @header_option = {
         "User-Agent" => DEFAULT_USER_AGENT,
+        # 嘘っこ
         "Referer" => "http://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q#{Time.now.to_i}"
       }
       @header_option = self.class.merge_header_option(@header_option,header_option)
@@ -97,9 +98,10 @@ module Panow
     end
 
     def parse
-      an =  Panow::ExtractContent::analyse(self.html)
-      @title = an[1]
-      @contents = an[0]
+      ar =  Panow::ExtractContent::analyse(self.html)
+      @title      = ar[1]
+      @contents   = ar[0]
+      @image_urls = ar[2]
     end
 
     def title
@@ -109,24 +111,28 @@ module Panow
 
     def contents
       parse unless @contents
-      @contetnts
+      @contents
     end
 
     def image_urls
-      #puts 'call image_urls'
-      ret = []
-      doc = Nokogiri::HTML(html)
-      #p doc
-      (doc/:img).each do |elem|
-        ret << elem[:src]
-      end
-      ret
+      parse unless @image_urls
+      @image_urls
+
+      ##puts 'call image_urls'
+      #ret = []
+      #doc = Nokogiri::HTML(html)
+      ##p doc
+      #(doc/:img).each do |elem|
+        #ret << elem[:src]
+      #end
+      #ret
     end
 
-    def images
+    def images(opt={})
       results = Parallel.map(self.image_urls, :in_threads=>10) do |img_url|
-        img = self.get_image(img_url,{},{:Referer=>url})
+        img = self.get_image(img_url,opt,{:Referer=>url})
       end
+      results.reject!{|o|o==nil}
       results
     end
 
@@ -169,25 +175,24 @@ module Panow
 
       data = open(iurl,opt).read
       img = ImageSize.new(data)
-      # 画像サイズチェック
-      if image_option[:min_width].present?  ||
-        image_option[:max_width].present?  ||
-        image_option[:min_height].present? ||
-        image_option[:max_height].present?
 
-        image_option[:max_width] ||= 10000
-        image_option[:max_height] ||= 10000
+      min_w = image_option[:min_width].presence  || 200
+      min_h = image_option[:min_height].presence || 200
+      max_w = image_option[:max_width].presence  || 10000
+      max_h = image_option[:max_height].presence || 10000
 
-        # TODO テストサイトにサイズがでかいファイルを入れて
-        # ちゃんとはじかれるかのチェック
-        # 取得上限を超えた画像は取得しない
-        if image_option[:min_width].to_i  > img.width  ||
-           image_option[:max_width].to_i  < img.width  ||
-           image_option[:min_height].to_i > img.height ||
-           image_option[:max_height].to_i < img.height
+      #puts "min_w=#{min_w}:max_w=#{max_w}:min_h=#{min_h}:max_h=#{max_h}"
+      #puts "img.width=#{img.width}:img.height=#{img.height}"
 
-          return nil
-        end
+      # TODO テストサイトにサイズがでかいファイルを入れて
+      # ちゃんとはじかれるかのチェック
+      # 取得上限を超えた画像は取得しない
+      if min_w.to_i  > img.width  ||
+         max_w.to_i  < img.width  ||
+         min_h.to_i > img.height ||
+         max_h.to_i < img.height
+
+        return nil
       end
       return Image.new(:data=>data,:format=>img.format,:width=>img.width,:height=>img.height)
     end

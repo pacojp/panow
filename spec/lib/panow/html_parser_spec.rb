@@ -31,7 +31,7 @@ describe "パーサー" do
   context "localhost:18764へのテスト" do
     context 'utf 8 page' do
       it "image_urls size" do
-        @image_urls.size.should eq 5
+        @image_urls.size.should eq 6
       end
 
       it "image_urls first item" do
@@ -45,11 +45,12 @@ describe "パーサー" do
       end
 
       it "image_urls fifth item" do
-        img = @parser.get_image(@image_urls[4])
+        img = @parser.get_image(@image_urls[5])
         img.ext.should eq '.gif'
       end
 
       it "images" do
+        # 一つ小さい画像があるので
         @images.size.should eq 5
         @images.each do |img|
           if img.md5hash == '16805f3d99c02baf5fd05a5bc30a8e06'
@@ -68,7 +69,7 @@ describe "パーサー" do
 
     context 'euc page' do
       it "image_urls size" do
-        @image_urls_euc.size.should eq 5
+        @image_urls_euc.size.should eq 6
       end
 
       it "image_urls first item" do
@@ -82,7 +83,7 @@ describe "パーサー" do
       end
 
       it "image_urls fifth item" do
-        img = @parser_euc.get_image(@image_urls_euc[4])
+        img = @parser_euc.get_image(@image_urls_euc[5])
         img.ext.should eq '.gif'
       end
 
