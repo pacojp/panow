@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-require './parser.rb'
+#require './lib/parser.rb'
 
 describe "パーサー" do
   before do
